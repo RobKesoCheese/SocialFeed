@@ -3,28 +3,29 @@ package crud;
 import javax.swing.*;
 import java.awt.*;
 
+@SuppressWarnings("serial") // Fix for yellow warning
 public class LoginScreen extends JDialog {
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private UserManager userManager;
-    private User loggedInUser = null; // This will store the user if login is successful
+    // ... rest of your existing LoginScreen.java code ...
+    // (No other changes needed here)
+// ...
+    private UserManager userManager;
+    private User loggedInUser = null;
 
     private JTextField usernameField;
     private JPasswordField passwordField;
+    private JTextField avatarUrlField;
 
     public LoginScreen(Frame parent, UserManager userManager) {
-        super(parent, "Login or Register", true); // 'true' makes it a modal dialog
+        super(parent, "Login or Register", true);
         this.userManager = userManager;
 
         setLayout(new BorderLayout(10, 10));
-        setSize(300, 150);
-        setLocationRelativeTo(parent); // Center on the parent window
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); // Just close this dialog
+        setSize(350, 200); // Made window taller
+        setLocationRelativeTo(parent);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
         // --- Components ---
-        JPanel fieldsPanel = new JPanel(new GridLayout(2, 2, 5, 5));
+        JPanel fieldsPanel = new JPanel(new GridLayout(3, 2, 5, 5));
         fieldsPanel.add(new JLabel("Username:"));
         usernameField = new JTextField();
         fieldsPanel.add(usernameField);
@@ -32,6 +33,10 @@ public class LoginScreen extends JDialog {
         fieldsPanel.add(new JLabel("Password:"));
         passwordField = new JPasswordField();
         fieldsPanel.add(passwordField);
+        
+        fieldsPanel.add(new JLabel("Avatar URL (optional):"));
+        avatarUrlField = new JTextField();
+        fieldsPanel.add(avatarUrlField);
 
         JPanel buttonsPanel = new JPanel(new FlowLayout());
         JButton loginButton = new JButton("Login");
@@ -46,8 +51,6 @@ public class LoginScreen extends JDialog {
         // --- Actions ---
         loginButton.addActionListener(e -> onLogin());
         registerButton.addActionListener(e -> onRegister());
-        
-        // Also allow login with Enter key
         passwordField.addActionListener(e -> onLogin());
     }
 
@@ -59,7 +62,7 @@ public class LoginScreen extends JDialog {
         
         if (user != null) {
             this.loggedInUser = user;
-            dispose(); // Close the dialog
+            dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Invalid username or password.", "Login Failed", JOptionPane.ERROR_MESSAGE);
         }
@@ -68,26 +71,26 @@ public class LoginScreen extends JDialog {
     private void onRegister() {
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
+        String avatarUrl = avatarUrlField.getText();
 
         if (username.trim().isEmpty() || password.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Username and password cannot be empty.", "Registration Failed", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        User user = userManager.register(username, password);
+        User user = userManager.register(username, password, avatarUrl);
         
         if (user != null) {
             this.loggedInUser = user;
             JOptionPane.showMessageDialog(this, "Registration successful! You are now logged in.");
-            dispose(); // Close the dialog
+            dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Username is already taken.", "Registration Failed", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    // This is the public method the main app will call
     public User showLoginDialog() {
-        setVisible(true); // This call will "block" until the dialog is closed
-        return this.loggedInUser; // Return the user (or null)
+        setVisible(true);
+        return this.loggedInUser;
     }
 }

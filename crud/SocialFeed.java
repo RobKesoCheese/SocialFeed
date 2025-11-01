@@ -11,8 +11,13 @@ public class SocialFeed {
 
     private static ArrayList<Post> posts;
     private static final String SAVE_FILE = "posts.dat";
+    
+    @SuppressWarnings("unused") // Fix for yellow warning
     private static Scanner scanner = new Scanner(System.in);
 
+    // ... rest of your existing SocialFeed.java code ...
+    // (No other changes needed here)
+// ...
     public static void main(String[] args) {
         loadPosts();
         showMenu();
@@ -65,7 +70,8 @@ public class SocialFeed {
             return;
         }
         
-        Post newPost = new Post(author, content, ""); // Add "" for the empty image URL
+        // --- UPDATED: Pass 4 args ---
+        Post newPost = new Post(author, "", content, ""); // Add "" for avatar, "" for image
         posts.add(newPost);
         System.out.println("Post created successfully!");
     }
@@ -75,17 +81,12 @@ public class SocialFeed {
         if (postsToView.isEmpty()) {
             System.out.println("No posts to show.");
         } else {
-            // Loop from newest to oldest
             for (int i = postsToView.size() - 1; i >= 0; i--) {
-                // This uses the Post.java toString() which is now HTML.
-                // It will look messy in the console, but it's functional.
-                // We'll create a simple text output here instead.
                 printPostAsText(postsToView.get(i));
             }
         }
     }
     
-    // Helper to print a post as plain text in the console
     private static void printPostAsText(Post post) {
         System.out.println("----------------------------------------");
         System.out.printf("Post #%d by %s (%s) [%d Likes, %d Dislikes]\n",
@@ -137,7 +138,6 @@ public class SocialFeed {
         }
     }
 
-    // --- UPDATED addComment ---
     public static void addComment() {
         Post post = findPostById();
         if (post != null) {
@@ -148,31 +148,31 @@ public class SocialFeed {
             String content = scanner.nextLine();
             
             if (!content.isEmpty()) {
-                // Create a new Comment object
                 post.addComment(new Comment(author, content));
                 System.out.println("Comment added to Post #" + post.getId());
             }
         }
     }
 
+    // --- UPDATED: To use new toggle logic ---
     public static void likePost() {
         Post post = findPostById();
         if (post != null) {
-            post.addLike();
-            System.out.println("You liked Post #" + post.getId() + "!");
+            // This will just use the post ID as the "username" for console
+            post.toggleLike(String.valueOf(post.getId()));
+            System.out.println("Toggled like on Post #" + post.getId() + "!");
         }
     }
     
-    // --- NEW dislikePost ---
     public static void dislikePost() {
         Post post = findPostById();
         if (post != null) {
-            post.addDislike();
-            System.out.println("You disliked Post #" + post.getId() + ".");
+            // This will just use the post ID as the "username" for console
+            post.toggleDislike(String.valueOf(post.getId()));
+            System.out.println("Toggled dislike on Post #" + post.getId() + ".");
         }
     }
 
-    // --- Helper Method ---
     private static Post findPostById() {
         System.out.print("Enter the ID of the post: ");
         try {
@@ -190,7 +190,6 @@ public class SocialFeed {
         }
     }
 
-    // --- Save & Load Methods (Unchanged) ---
     @SuppressWarnings("unchecked")
     private static void loadPosts() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(SAVE_FILE))) {

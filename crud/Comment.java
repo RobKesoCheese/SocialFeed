@@ -3,10 +3,11 @@ package crud;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+@SuppressWarnings("serial") // Fix for yellow warning
 public class Comment implements Serializable {
-    private static final long serialVersionUID = 1L;
-    
-    // Static ID tracking for comments
+    // ... rest of your existing Comment.java code ...
+    // (No other changes needed here)
+// ...
     private static long nextId = 1;
     private long id;
     
@@ -35,8 +36,6 @@ public class Comment implements Serializable {
     }
 
     // --- NEW: Static method for Save/Load ---
-    // This finds the highest comment ID across ALL posts
-    // and updates the static counter.
     public static void updateNextId(ArrayList<Post> posts) {
         long maxId = 0;
         if (posts != null) {

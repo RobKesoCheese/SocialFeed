@@ -3,11 +3,11 @@ package crud;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * A custom JPanel that paints itself with rounded corners.
- */
+@SuppressWarnings("serial") // Fix for yellow warning
 public class RoundedPanel extends JPanel {
-    private static final long serialVersionUID = 1L;
+    // ... rest of your existing RoundedPanel.java code ...
+    // (No other changes needed here)
+// ...
     private Color backgroundColor;
     private int cornerRadius = 15;
 
@@ -15,7 +15,7 @@ public class RoundedPanel extends JPanel {
         super(layout);
         this.cornerRadius = radius;
         this.backgroundColor = bgColor;
-        setOpaque(false); // We will paint our own background
+        setOpaque(false);
     }
 
     @Override
@@ -27,10 +27,9 @@ public class RoundedPanel extends JPanel {
         Graphics2D graphics = (Graphics2D) g;
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // Draws the rounded panel with borders.
         graphics.setColor(backgroundColor);
         graphics.fillRoundRect(0, 0, width-1, height-1, arcs.width, arcs.height);
-        graphics.setColor(Color.LIGHT_GRAY); // Border color
+        graphics.setColor(Color.LIGHT_GRAY);
         graphics.drawRoundRect(0, 0, width-1, height-1, arcs.width, arcs.height);
     }
 }
